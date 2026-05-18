@@ -1,0 +1,1260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MediChat — AI Medical Assistant</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='images/try2.jpg') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --navy: #0d1b2a;
+        --navy2: #1b2b3a;
+        --teal: #0ea5a0;
+        --teal2: #14b8b3;
+        --teal-light: #e0f7f6;
+        --white: #ffffff;
+        --gray: #f4f7f9;
+        --text: #1e2d3d;
+        --muted: #6b7c8d;
+        --border: #dce6ed;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        color: var(--text);
+        background: var(--white);
+        overflow-x: hidden;
+      }
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 5%;
+        height: 70px;
+        background: rgba(13, 27, 42, 0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+      .nav-logo-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--teal), #0d9488);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: white;
+      }
+      .nav-logo-text {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--white);
+      }
+      .nav-logo-text span {
+        color: var(--teal2);
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        list-style: none;
+      }
+      .nav-links a {
+        color: rgba(255, 255, 255, 0.75);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 8px 13px;
+        border-radius: 8px;
+        transition: all 0.2s;
+      }
+      .nav-links a:hover {
+        color: white;
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .nav-links .btn-outline {
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      .nav-links .btn-outline:hover {
+        border-color: var(--teal);
+        color: var(--teal2);
+        background: rgba(14, 165, 160, 0.1);
+      }
+      .nav-links .btn-primary-nav {
+        background: linear-gradient(135deg, var(--teal), #0d9488);
+        color: white !important;
+        font-weight: 600;
+      }
+      .nav-links .btn-primary-nav:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px rgba(14, 165, 160, 0.4);
+      }
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        padding: 8px;
+        background: none;
+        border: none;
+      }
+      .hamburger span {
+        width: 22px;
+        height: 2px;
+        background: white;
+        border-radius: 2px;
+        display: block;
+      }
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        background: linear-gradient(
+          135deg,
+          var(--navy) 0%,
+          var(--navy2) 60%,
+          #0f2940 100%
+        );
+        padding: 100px 5% 60px;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: -200px;
+        right: -200px;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(14, 165, 160, 0.15) 0%,
+          transparent 70%
+        );
+      }
+      .hero-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        gap: 60px;
+        position: relative;
+        z-index: 1;
+        width: 100%;
+      }
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(14, 165, 160, 0.15);
+        border: 1px solid rgba(14, 165, 160, 0.3);
+        color: var(--teal2);
+        font-size: 13px;
+        font-weight: 500;
+        padding: 6px 14px;
+        border-radius: 50px;
+        margin-bottom: 24px;
+      }
+      .hero h1 {
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        font-weight: 700;
+        color: white;
+        line-height: 1.15;
+        margin-bottom: 20px;
+      }
+      .hero h1 span {
+        background: linear-gradient(135deg, var(--teal2), #6ee7e4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 17px;
+        color: rgba(255, 255, 255, 0.65);
+        line-height: 1.75;
+        margin-bottom: 36px;
+      }
+      .hero-cta {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .btn-hero-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, var(--teal), #0d9488);
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 15px;
+        padding: 14px 28px;
+        border-radius: 10px;
+        transition: all 0.25s;
+        box-shadow: 0 4px 20px rgba(14, 165, 160, 0.35);
+      }
+      .btn-hero-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(14, 165, 160, 0.45);
+      }
+      .btn-hero-outline {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1.5px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 15px;
+        padding: 14px 28px;
+        border-radius: 10px;
+        transition: all 0.25s;
+      }
+      .btn-hero-outline:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.5);
+      }
+      .hero-stats {
+        display: flex;
+        gap: 32px;
+        margin-top: 44px;
+        padding-top: 36px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .stat-num {
+        font-size: 22px;
+        font-weight: 700;
+        color: white;
+      }
+      .stat-label {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.5);
+        margin-top: 3px;
+      }
+      .hero-visual {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+      }
+      .hero-img-wrap {
+        width: 420px;
+        height: 420px;
+        border-radius: 30px;
+        overflow: hidden;
+        border: 2px solid rgba(14, 165, 160, 0.3);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+        position: relative;
+      }
+      .hero-img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .hero-card {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 14px;
+        padding: 14px 18px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      }
+      .hero-card-tl {
+        top: -20px;
+        left: -30px;
+      }
+      .hero-card-br {
+        bottom: -20px;
+        right: -30px;
+      }
+      .card-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, var(--teal), #0d9488);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+      .card-text .label {
+        font-size: 11px;
+        color: var(--muted);
+        font-weight: 500;
+      }
+      .card-text .value {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .card-pulse {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .pulse-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #22c55e;
+        animation: pulse 1.5s infinite;
+      }
+      .card-pulse span {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+      .strip {
+        background: var(--teal);
+        padding: 18px 5%;
+      }
+      .strip-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        flex-wrap: wrap;
+      }
+      .strip-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: white;
+        font-size: 14px;
+        font-weight: 500;
+      }
+      section {
+        padding: 90px 5%;
+      }
+      .section-tag {
+        display: inline-block;
+        background: var(--teal-light);
+        color: var(--teal);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 5px 14px;
+        border-radius: 50px;
+        margin-bottom: 14px;
+      }
+      .section-title {
+        font-size: clamp(1.6rem, 3vw, 2.4rem);
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.2;
+        margin-bottom: 14px;
+      }
+      .section-sub {
+        font-size: 16px;
+        color: var(--muted);
+        line-height: 1.7;
+        max-width: 560px;
+      }
+      .how {
+        background: var(--gray);
+      }
+      .how-inner,
+      .benefits-inner,
+      .features-inner,
+      .source-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .how-header {
+        margin-bottom: 56px;
+      }
+      .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+      }
+      .step-card {
+        background: white;
+        border-radius: 18px;
+        padding: 32px 28px;
+        border: 1px solid var(--border);
+        position: relative;
+        overflow: hidden;
+        transition:
+          transform 0.25s,
+          box-shadow 0.25s;
+      }
+      .step-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+      }
+      .step-card::before {
+        content: attr(data-step);
+        position: absolute;
+        top: -10px;
+        right: 16px;
+        font-size: 80px;
+        font-weight: 800;
+        color: rgba(14, 165, 160, 0.07);
+        line-height: 1;
+      }
+      .step-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        background: var(--teal-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        color: var(--teal);
+        margin-bottom: 20px;
+      }
+      .step-card h3 {
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 10px;
+      }
+      .step-card p {
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+      .features-inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 70px;
+        align-items: center;
+      }
+      .features-img {
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+      }
+      .features-img img {
+        width: 100%;
+        height: 420px;
+        object-fit: cover;
+        display: block;
+      }
+      .feature-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 32px;
+      }
+      .feature-item {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+      }
+      .feature-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        background: var(--teal-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: var(--teal);
+        flex-shrink: 0;
+      }
+      .feature-item h4 {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+      .feature-item p {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .source {
+        background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+      }
+      .source-inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+      }
+      .source .section-title {
+        color: white;
+      }
+      .source .section-sub {
+        color: rgba(255, 255, 255, 0.6);
+      }
+      .source-img {
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      }
+      .source-img img {
+        width: 100%;
+        height: 380px;
+        object-fit: cover;
+        display: block;
+      }
+      .source-book {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        padding: 18px 20px;
+        margin-top: 28px;
+      }
+      .source-book i {
+        font-size: 28px;
+        color: var(--teal2);
+      }
+      .source-book-text .label {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.45);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .source-book-text .value {
+        font-size: 14px;
+        font-weight: 600;
+        color: white;
+        margin-top: 2px;
+      }
+      .btn-source {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 24px;
+        background: linear-gradient(135deg, var(--teal), #0d9488);
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        padding: 12px 24px;
+        border-radius: 9px;
+        transition: all 0.25s;
+      }
+      .btn-source:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(14, 165, 160, 0.4);
+      }
+      .benefits {
+        background: var(--gray);
+      }
+      .benefits-header {
+        text-align: center;
+        margin-bottom: 52px;
+      }
+      .benefits-header .section-sub {
+        margin: 0 auto;
+      }
+      .benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      .benefit-card {
+        background: white;
+        border-radius: 16px;
+        padding: 28px 24px;
+        border: 1px solid var(--border);
+        text-align: center;
+        transition: all 0.25s;
+      }
+      .benefit-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.07);
+        border-color: var(--teal);
+      }
+      .benefit-card .b-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        background: var(--teal-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: var(--teal);
+        margin: 0 auto 18px;
+      }
+      .benefit-card h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 10px;
+      }
+      .benefit-card p {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+      .cta-section {
+        background: linear-gradient(135deg, var(--teal) 0%, #0d9488 100%);
+        text-align: center;
+        padding: 80px 5%;
+      }
+      .cta-section h2 {
+        font-size: clamp(1.6rem, 3vw, 2.4rem);
+        font-weight: 700;
+        color: white;
+        margin-bottom: 14px;
+      }
+      .cta-section p {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 36px;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .cta-btns {
+        display: flex;
+        gap: 14px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .btn-cta-white {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: white;
+        color: var(--teal);
+        font-weight: 700;
+        font-size: 15px;
+        padding: 14px 28px;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: all 0.25s;
+      }
+      .btn-cta-white:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+      .btn-cta-outline {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 2px solid rgba(255, 255, 255, 0.6);
+        color: white;
+        font-weight: 600;
+        font-size: 15px;
+        padding: 14px 28px;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: all 0.25s;
+      }
+      .btn-cta-outline:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: white;
+      }
+      footer {
+        background: var(--navy);
+        padding: 52px 5% 28px;
+      }
+      .footer-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .footer-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 40px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+      }
+      .footer-brand .logo-text {
+        font-size: 22px;
+        font-weight: 700;
+        color: white;
+      }
+      .footer-brand .logo-text span {
+        color: var(--teal2);
+      }
+      .footer-brand p {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.45);
+        margin-top: 10px;
+        max-width: 220px;
+        line-height: 1.6;
+      }
+      .footer-links h4 {
+        font-size: 13px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.5);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 14px;
+      }
+      .footer-links ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .footer-links ul a {
+        color: rgba(255, 255, 255, 0.65);
+        text-decoration: none;
+        font-size: 14px;
+        transition: color 0.2s;
+      }
+      .footer-links ul a:hover {
+        color: var(--teal2);
+      }
+      .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        padding-top: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .footer-bottom p {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .social-links {
+        display: flex;
+        gap: 12px;
+      }
+      .social-links a {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.06);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 15px;
+        text-decoration: none;
+        transition: all 0.2s;
+      }
+      .social-links a:hover {
+        background: var(--teal);
+        color: white;
+      }
+      .chat-float {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        z-index: 999;
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--teal), #0d9488);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 6px 24px rgba(14, 165, 160, 0.5);
+        text-decoration: none;
+        color: white;
+        font-size: 24px;
+        transition: all 0.25s;
+      }
+      .chat-float:hover {
+        transform: scale(1.1);
+        box-shadow: 0 10px 35px rgba(14, 165, 160, 0.6);
+      }
+      @media (max-width: 900px) {
+        .hero-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+        .hero-visual {
+          display: none;
+        }
+        .hero-cta,
+        .hero-stats {
+          justify-content: center;
+        }
+        .steps-grid,
+        .benefits-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .features-inner,
+        .source-inner {
+          grid-template-columns: 1fr;
+        }
+        .source-img {
+          display: none;
+        }
+      }
+      @media (max-width: 600px) {
+        .steps-grid,
+        .benefits-grid {
+          grid-template-columns: 1fr;
+        }
+        .nav-links {
+          display: none;
+          flex-direction: column;
+          position: absolute;
+          top: 70px;
+          left: 0;
+          right: 0;
+          background: rgba(13, 27, 42, 0.98);
+          padding: 16px 5%;
+          gap: 4px;
+        }
+        .nav-links.open {
+          display: flex;
+        }
+        .hamburger {
+          display: flex;
+        }
+        .strip-inner {
+          gap: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="{{ url_for('agnos') }}" class="nav-logo">
+        <div class="nav-logo-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+        <span class="nav-logo-text">Medi<span>Chat</span></span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="{{ url_for('agnos') }}">Home</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#benefits">Features</a></li>
+        <li><a href="{{ url_for('login') }}" class="btn-outline">Log In</a></li>
+        <li>
+          <a href="{{ url_for('signup') }}" class="btn-outline">Sign Up</a>
+        </li>
+        <li>
+          <a href="{{ url_for('chatbox') }}" class="btn-primary-nav"
+            >Chat Now</a
+          >
+        </li>
+      </ul>
+      <button
+        class="hamburger"
+        id="hamburger"
+        onclick="document.getElementById('navLinks').classList.toggle('open')"
+        aria-label="Menu"
+      >
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-content">
+        <div>
+          <div class="hero-badge">
+            <i class="fa-solid fa-circle-check"></i> AI-Powered Medical
+            Assistant
+          </div>
+          <h1>Your Personal <span>Medical Guide</span>, Available 24/7</h1>
+          <p>
+            Ask health questions and get instant answers backed by professional
+            medical sources. Powered by Google Gemini AI and a comprehensive
+            medical knowledge base.
+          </p>
+          <div class="hero-cta">
+            <a href="{{ url_for('chatbox') }}" class="btn-hero-primary"
+              ><i class="fa-solid fa-comments"></i> Start Chatting</a
+            >
+            <a href="#how-it-works" class="btn-hero-outline"
+              ><i class="fa-solid fa-circle-play"></i> Learn More</a
+            >
+          </div>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <div class="stat-num">24/7</div>
+              <div class="stat-label">Availability</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num">AI</div>
+              <div class="stat-label">Powered</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num">Free</div>
+              <div class="stat-label">To Use</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num">Fast</div>
+              <div class="stat-label">Responses</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-img-wrap">
+            <img
+              src="{{ url_for('static', filename='images/Gemini_Generated_Image_x3lgz7x3lgz7x3lg.jpg') }}"
+              alt="Medical AI Assistant"
+            />
+          </div>
+          <div class="hero-card hero-card-tl">
+            <div style="display: flex; align-items: center; gap: 10px">
+              <div class="card-icon">
+                <i class="fa-solid fa-stethoscope"></i>
+              </div>
+              <div class="card-text">
+                <div class="label">Status</div>
+                <div class="value">AI Online</div>
+              </div>
+            </div>
+          </div>
+          <div class="hero-card hero-card-br">
+            <div class="card-pulse">
+              <div class="pulse-dot"></div>
+              <span>Ready to Help</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="strip">
+      <div class="strip-inner">
+        <div class="strip-item">
+          <i class="fa-solid fa-shield-halved"></i> Privacy Protected
+        </div>
+        <div class="strip-item">
+          <i class="fa-solid fa-bolt"></i> Instant Responses
+        </div>
+        <div class="strip-item">
+          <i class="fa-solid fa-book-medical"></i> Professional Sources
+        </div>
+        <div class="strip-item">
+          <i class="fa-solid fa-robot"></i> Gemini AI Powered
+        </div>
+        <div class="strip-item">
+          <i class="fa-solid fa-clock"></i> Available 24/7
+        </div>
+      </div>
+    </div>
+
+    <section class="how" id="how-it-works">
+      <div class="how-inner">
+        <div class="how-header">
+          <div class="section-tag">Process</div>
+          <h2 class="section-title">How MediChat Works</h2>
+          <p class="section-sub">
+            Three simple steps to get accurate medical information powered by
+            AI.
+          </p>
+        </div>
+        <div class="steps-grid">
+          <div class="step-card" data-step="1">
+            <div class="step-icon"><i class="fa-solid fa-keyboard"></i></div>
+            <h3>Ask Your Question</h3>
+            <p>
+              Type your health question naturally in the chat. No medical jargon
+              needed — just ask like you would a doctor.
+            </p>
+          </div>
+          <div class="step-card" data-step="2">
+            <div class="step-icon">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <h3>AI Searches Knowledge Base</h3>
+            <p>
+              Our system searches through professional medical textbooks using
+              advanced hybrid search to find the most relevant information.
+            </p>
+          </div>
+          <div class="step-card" data-step="3">
+            <div class="step-icon"><i class="fa-solid fa-message"></i></div>
+            <h3>Get a Clear Answer</h3>
+            <p>
+              Receive a structured answer from Google Gemini AI, grounded in
+              professional medical knowledge from trusted sources.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="features-inner">
+        <div class="features-img">
+          <img
+            src="{{ url_for('static', filename='images/new1.jpg') }}"
+            alt="Medical features"
+          />
+        </div>
+        <div>
+          <div class="section-tag">Features</div>
+          <h2 class="section-title">Everything You Need for Health Guidance</h2>
+          <p class="section-sub">
+            MediChat combines cutting-edge AI with professional medical
+            knowledge to provide reliable health information.
+          </p>
+          <div class="feature-list">
+            <div class="feature-item">
+              <div class="feature-icon"><i class="fa-solid fa-brain"></i></div>
+              <div>
+                <h4>Intelligent Medical Q&A</h4>
+                <p>
+                  Ask any health question and get contextual answers from a
+                  knowledge base containing thousands of medical topics.
+                </p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">
+                <i class="fa-solid fa-apple-whole"></i>
+              </div>
+              <div>
+                <h4>Calorie Analysis</h4>
+                <p>
+                  Upload a food image and get a detailed calorie breakdown using
+                  Gemini's vision AI — helpful for nutrition tracking.
+                </p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+              <div>
+                <h4>Anonymous & Private</h4>
+                <p>
+                  Ask sensitive health questions without revealing your
+                  identity. Your conversations remain private.
+                </p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">
+                <i class="fa-solid fa-book-open"></i>
+              </div>
+              <div>
+                <h4>Professional Source Material</h4>
+                <p>
+                  All answers are grounded in the Gale Encyclopedia of Medicine
+                  — a trusted professional medical reference.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="source">
+      <div class="source-inner">
+        <div>
+          <div
+            class="section-tag"
+            style="background: rgba(14, 165, 160, 0.2); color: var(--teal2)"
+          >
+            Data Source
+          </div>
+          <h2 class="section-title">
+            Backed by Professional Medical Literature
+          </h2>
+          <p class="section-sub">
+            Our knowledge base is built from the Gale Encyclopedia of Medicine —
+            a comprehensive, authoritative reference trusted by healthcare
+            professionals worldwide.
+          </p>
+          <div class="source-book">
+            <i class="fa-solid fa-book-medical"></i>
+            <div class="source-book-text">
+              <div class="label">Primary Source</div>
+              <div class="value">
+                The Gale Encyclopedia of Medicine, 2nd Edition
+              </div>
+            </div>
+          </div>
+          <a
+            href="https://www.academia.edu/32752835/The_GALE_ENCYCLOPEDIA_of_MEDICINE_SECOND_EDITION"
+            target="_blank"
+            class="btn-source"
+            ><i class="fa-solid fa-arrow-up-right-from-square"></i> View Source
+            Book</a
+          >
+        </div>
+        <div class="source-img">
+          <img
+            src="{{ url_for('static', filename='images/book front page.jpg') }}"
+            alt="Medical Encyclopedia"
+          />
+        </div>
+      </div>
+    </section>
+
+    <section class="benefits" id="benefits">
+      <div class="benefits-inner">
+        <div class="benefits-header">
+          <div class="section-tag">Why MediChat</div>
+          <h2 class="section-title">Benefits of AI Medical Assistance</h2>
+          <p class="section-sub">
+            MediChat makes medical information accessible, fast, and reliable
+            for everyone.
+          </p>
+        </div>
+        <div class="benefits-grid">
+          <div class="benefit-card">
+            <div class="b-icon"><i class="fa-solid fa-clock"></i></div>
+            <h3>24/7 Availability</h3>
+            <p>
+              Get answers any time of day or night — no waiting rooms, no
+              appointments, no delays.
+            </p>
+          </div>
+          <div class="benefit-card">
+            <div class="b-icon"><i class="fa-solid fa-user-shield"></i></div>
+            <h3>Anonymity & Privacy</h3>
+            <p>
+              Ask sensitive health questions without worrying about judgment or
+              privacy concerns.
+            </p>
+          </div>
+          <div class="benefit-card">
+            <div class="b-icon"><i class="fa-solid fa-bolt"></i></div>
+            <h3>Instant Responses</h3>
+            <p>
+              No waiting. Get immediate, well-reasoned answers to your health
+              questions in seconds.
+            </p>
+          </div>
+          <div class="benefit-card">
+            <div class="b-icon">
+              <i class="fa-solid fa-person-chalkboard"></i>
+            </div>
+            <h3>Personalized Guidance</h3>
+            <p>
+              The AI engages in a conversational, diagnostic style — asking
+              follow-up questions for better answers.
+            </p>
+          </div>
+          <div class="benefit-card">
+            <div class="b-icon"><i class="fa-solid fa-earth-americas"></i></div>
+            <h3>Wide Accessibility</h3>
+            <p>
+              Accessible to anyone with an internet connection, bridging
+              healthcare gaps in underserved areas.
+            </p>
+          </div>
+          <div class="benefit-card">
+            <div class="b-icon"><i class="fa-solid fa-file-medical"></i></div>
+            <h3>Medical FAQs & Cases</h3>
+            <p>
+              Covers thousands of conditions, symptoms, treatments, and medical
+              FAQs from professional sources.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="cta-section">
+      <h2>Ready to Ask Your Health Question?</h2>
+      <p>Start a conversation with MediChat right now — no signup required.</p>
+      <div class="cta-btns">
+        <a href="{{ url_for('chatbox') }}" class="btn-cta-white"
+          ><i class="fa-solid fa-comments"></i> Open Chat</a
+        >
+        <a href="{{ url_for('signup') }}" class="btn-cta-outline"
+          ><i class="fa-solid fa-user-plus"></i> Create Account</a
+        >
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <div class="logo-text">Medi<span>Chat</span></div>
+            <p>
+              AI-powered medical assistant grounded in professional medical
+              literature.
+            </p>
+          </div>
+          <div class="footer-links">
+            <h4>Navigation</h4>
+            <ul>
+              <li><a href="{{ url_for('agnos') }}">Home</a></li>
+              <li><a href="{{ url_for('chatbox') }}">Chat</a></li>
+              <li><a href="{{ url_for('login') }}">Log In</a></li>
+              <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+            </ul>
+          </div>
+          <div class="footer-links">
+            <h4>Resources</h4>
+            <ul>
+              <li><a href="#how-it-works">How It Works</a></li>
+              <li><a href="#features">Features</a></li>
+              <li><a href="#benefits">Benefits</a></li>
+              <li>
+                <a
+                  href="https://www.academia.edu/32752835/The_GALE_ENCYCLOPEDIA_of_MEDICINE_SECOND_EDITION"
+                  target="_blank"
+                  >Source Book</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>
+            &copy; 2026 MediChat. Built by Muhammad Uzair Ali and Subhan Nadeem.
+          </p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+            <a href="#"><i class="fas fa-envelope"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <a href="{{ url_for('chatbox') }}" class="chat-float" title="Open Chat"
+      ><i class="fa-solid fa-comments"></i
+    ></a>
+  </body>
+</html>

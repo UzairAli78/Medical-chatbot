@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up — MediChat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--navy:#0d1b2a;--teal:#0ea5a0;--teal2:#14b8b3;--white:#fff;--gray:#f4f7f9;--text:#1e2d3d;--muted:#6b7c8d;--border:#dce6ed}
+    body{font-family:'Inter',sans-serif;min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+    .left-panel{background:linear-gradient(135deg,var(--navy) 0%,#0f2940 100%);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:60px 40px;position:relative;overflow:hidden}
+    .left-panel::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(14,165,160,0.2) 0%,transparent 70%)}
+    .left-panel::after{content:'';position:absolute;bottom:-100px;left:-100px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(14,165,160,0.1) 0%,transparent 70%)}
+    .left-content{position:relative;z-index:1;text-align:center;max-width:380px}
+    .left-logo{display:inline-flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:40px}
+    .left-logo-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--teal),#0d9488);display:flex;align-items:center;justify-content:center;font-size:20px;color:white}
+    .left-logo-text{font-size:24px;font-weight:700;color:white}
+    .left-logo-text span{color:var(--teal2)}
+    .left-img{width:240px;height:240px;border-radius:24px;object-fit:cover;border:2px solid rgba(14,165,160,0.3);box-shadow:0 20px 60px rgba(0,0,0,0.4);margin-bottom:28px}
+    .left-tagline{font-size:18px;font-weight:600;color:white;line-height:1.4;margin-bottom:10px}
+    .left-sub{font-size:14px;color:rgba(255,255,255,0.55);line-height:1.6}
+    .perks{display:flex;flex-direction:column;gap:10px;margin-top:24px;text-align:left}
+    .perk{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,0.75);font-size:13px;font-weight:500}
+    .perk i{width:20px;color:var(--teal2);font-size:14px}
+    .right-panel{background:var(--white);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:50px 40px}
+    .form-box{width:100%;max-width:400px}
+    .back-link{display:inline-flex;align-items:center;gap:6px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;margin-bottom:28px;transition:color .2s}
+    .back-link:hover{color:var(--teal)}
+    .form-title{font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px}
+    .form-sub{font-size:14px;color:var(--muted);margin-bottom:28px}
+    .form-group{margin-bottom:16px}
+    .form-group label{display:block;font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px}
+    .input-wrap{position:relative}
+    .input-wrap i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px}
+    .input-wrap input{width:100%;padding:12px 14px 12px 40px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;color:var(--text);font-family:'Inter',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s;background:var(--gray)}
+    .input-wrap input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,165,160,0.1);background:white}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .btn-submit{width:100%;padding:13px;background:linear-gradient(135deg,var(--teal),#0d9488);color:white;font-size:15px;font-weight:600;border:none;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .25s;box-shadow:0 4px 15px rgba(14,165,160,0.3);margin-top:6px}
+    .btn-submit:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(14,165,160,0.4)}
+    .login-prompt{text-align:center;font-size:14px;color:var(--muted);margin-top:20px}
+    .login-prompt a{color:var(--teal);font-weight:600;text-decoration:none}
+    .login-prompt a:hover{text-decoration:underline}
+    .terms{font-size:12px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.5}
+    .terms a{color:var(--teal);text-decoration:none}
+    @media(max-width:768px){body{grid-template-columns:1fr}.left-panel{display:none}.right-panel{padding:40px 24px}.row2{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="left-panel">
+  <div class="left-content">
+    <a href="{{ url_for('agnos') }}" class="left-logo">
+      <div class="left-logo-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+      <span class="left-logo-text">Medi<span>Chat</span></span>
+    </a>
+    <img src="{{ url_for('static', filename='images/Gemini_Generated_Image_x3lgz7x3lgz7x3lg.jpg') }}" alt="Medical AI" class="left-img">
+    <div class="left-tagline">Join thousands getting better health guidance</div>
+    <div class="left-sub">Create your free account and start asking health questions instantly.</div>
+    <div class="perks">
+      <div class="perk"><i class="fa-solid fa-check-circle"></i> Free to use, no credit card needed</div>
+      <div class="perk"><i class="fa-solid fa-check-circle"></i> Instant access to AI medical assistant</div>
+      <div class="perk"><i class="fa-solid fa-check-circle"></i> Backed by professional medical sources</div>
+      <div class="perk"><i class="fa-solid fa-check-circle"></i> Available 24/7 from any device</div>
+    </div>
+  </div>
+</div>
+
+<div class="right-panel">
+  <div class="form-box">
+    <a href="{{ url_for('agnos') }}" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+    <div class="form-title">Create your account</div>
+    <div class="form-sub">It's free and only takes a minute</div>
+    <form>
+      <div class="row2">
+        <div class="form-group">
+          <label for="fname">First Name</label>
+          <div class="input-wrap">
+            <i class="fa-solid fa-user"></i>
+            <input type="text" id="fname" placeholder="First name" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="lname">Last Name</label>
+          <div class="input-wrap">
+            <i class="fa-solid fa-user"></i>
+            <input type="text" id="lname" placeholder="Last name" required>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-envelope"></i>
+          <input type="email" id="email" placeholder="you@example.com" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="password" placeholder="Create a password" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="confirm">Confirm Password</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="confirm" placeholder="Confirm your password" required>
+        </div>
+      </div>
+      <button type="submit" class="btn-submit">Create Account</button>
+    </form>
+    <div class="login-prompt">Already have an account? <a href="{{ url_for('login') }}">Log in</a></div>
+    <div class="terms">By signing up, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</div>
+  </div>
+</div>
+</body>
+</html>

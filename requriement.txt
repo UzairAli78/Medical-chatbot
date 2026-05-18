@@ -1,0 +1,23 @@
+# --- Core Framework ---
+Flask==3.0.3
+python-dotenv==1.0.1
+
+# --- LangChain Ecosystem ---
+langchain==0.3.3
+langchain-core==0.3.10
+langchain-community==0.3.2
+langchain-google-genai==2.0.0
+
+# --- Google Generative AI (Gemini) ---
+google-generativeai==0.8.2
+
+# --- Data & Utilities ---
+requests==2.32.3
+pandas==2.2.3
+numpy==1.26.4
+markdown==3.7
+protobuf==4.25.5
+
+# --- Optional Enhancements (safe to include) ---
+tqdm==4.66.5
+gunicorn==21.2.0        # For deployment
